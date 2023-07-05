@@ -30,6 +30,14 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: create env file
+        run: |
+          cd functions
+          touch .env
+          echo "DISCORD_SERVER_ID=${{ secrets.DISCORD_SERVER_ID }}" >> .env
+          echo "DISCORD_CHANNEL_ID=${{ secrets.DISCORD_CHANNEL_ID }}" >> .env
+          echo "DISCORD_SALAI_TOKEN=${{ secrets.DISCORD_SALAI_TOKEN }}" >> .env
+
       - name: Use NPM to install dependencies
         uses: actions/setup-node@v1
         with:
