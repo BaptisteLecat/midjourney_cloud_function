@@ -1,0 +1,40 @@
+name: Firebase Deploy to GCP
+
+on:
+  push:
+    branches: [prod]
+  pull_request:
+    branches: [prod]
+
+jobs:
+  deploy:
+    permissions:
+      contents: "read"
+      id-token: "write"
+    environment: prod
+    name: Setup Gcloud Account
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - id: auth
+        name: Login
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER_ID }}
+          service_account: ${{ secrets.WIP_EMAIL }}
+
+      - name: Configure gcloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Use NPM to install dependencies
+        uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+      - run: npm install
+
+      - name: Deploy the function
+        run: npm run deploy
