@@ -42,7 +42,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: "18.x"
-      - run: npm install
+      - run: |
+          cd functions
+          npm install
 
       - name: Deploy the function
-        run: npm run deploy
+        run: |
+          cd functions
+          npm run deploy
