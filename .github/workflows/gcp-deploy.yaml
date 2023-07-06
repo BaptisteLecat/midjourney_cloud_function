@@ -51,9 +51,11 @@ jobs:
           cd functions
           npm run build
 
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+      - name: deploy
+        uses: "google-github-actions/deploy-cloud-functions@v0"
         with:
-          args: deploy --only functions
-        env:
-          GCP_SA_KEY: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
+          # Name of the Cloud Function, same as the entry point name
+          name: "onGenerationCreated"
+          source_dir: "functions"
+          # Runtime to use for the function
+          runtime: "nodejs18"
