@@ -46,7 +46,7 @@ jobs:
           cd functions
           npm install
 
-      - name: Deploy the function
-        run: |
-          cd functions
-          npm run deploy
+      - name: 'deploy'
+        uses: 'google-github-actions/deploy-cloud-functions@v1'
+        with:
+          runtime: 'nodejs18'
