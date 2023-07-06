@@ -50,5 +50,5 @@ jobs:
         uses: 'google-github-actions/deploy-cloud-functions@v1'
         with:
           name: 'onGenerationCreated'
-          sourceDir: 'functions/lib'
+          source_dir: 'functions/lib'
           runtime: 'nodejs18'
