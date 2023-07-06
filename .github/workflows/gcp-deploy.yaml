@@ -49,4 +49,5 @@ jobs:
       - name: 'deploy'
         uses: 'google-github-actions/deploy-cloud-functions@v1'
         with:
+          name: 'onGenerationCreated'
           runtime: 'nodejs18'
