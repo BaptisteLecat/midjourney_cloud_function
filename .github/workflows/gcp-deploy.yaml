@@ -46,14 +46,8 @@ jobs:
           cd functions
           npm install
 
-      - name: Build
-        run: |
+      - name: Use NPM to install dependencies
+        uses: w9jds/firebase-action@master
+      - run: |
           cd functions
-          npm run build
-
-      - name: 'deploy'
-        uses: 'google-github-actions/deploy-cloud-functions@v1'
-        with:
-          name: 'onGenerationCreated'
-          source_dir: 'functions/lib'
-          runtime: 'nodejs18'
+          npm run deploy
