@@ -46,10 +46,14 @@ jobs:
           cd functions
           npm install
 
+      - name: Build
+        run: |
+          cd functions
+          npm run build
+
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
+          args: deploy --only functions
+        env:
           GCP_SA_KEY: ${{ env.GOOGLE_APPLICATION_CREDENTIALS }}
-      - run: |
-          cd functions
-          npm run deploy
