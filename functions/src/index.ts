@@ -1,6 +1,10 @@
 import * as functions from "firebase-functions";
 import { Generation } from "./entities/generation.entity";
 import { ImageGeneratorService } from "./services/image_generator.service";
+import * as admin from 'firebase-admin';
+
+admin.initializeApp();
+const db = admin.firestore();
 
 //firestore trigger for when a new generation is created
 export const onGenerationCreated = functions.runWith({ timeoutSeconds: 100 }).region("europe-west1").firestore.document('users/{userId}/locations/{locationId}/generations/{generationId}').onCreate(async (snapshot, context) => {
@@ -32,4 +36,18 @@ export const onGenerationCreated = functions.runWith({ timeoutSeconds: 100 }).re
 
     });
     imageGeneratorService.offProgress();
+});
+
+
+//function triggered on user creation
+export const onUserCreated = functions.region("europe-west1").auth.user().onCreate(async (user) => {
+    //create a new document in firestore
+    const userRef = db.collection('users').doc(user.uid);
+    await userRef.set({
+        id: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
 });
