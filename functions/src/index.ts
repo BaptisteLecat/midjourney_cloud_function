@@ -7,7 +7,7 @@ admin.initializeApp();
 const db = admin.firestore();
 
 //firestore trigger for when a new generation is created
-export const onGenerationCreated = functions.runWith({ timeoutSeconds: 100 }).region("europe-west1").firestore.document('users/{userId}/locations/{locationId}/generations/{generationId}').onCreate(async (snapshot, context) => {
+export const onGenerationCreated = functions.runWith({ timeoutSeconds: 160 }).region("europe-west1").firestore.document('users/{userId}/locations/{locationId}/generations/{generationId}').onCreate(async (snapshot, context) => {
     const generationId = context.params.generationId;
     const generation = Generation.fromFirestoreDocument(generationId, snapshot.data());
     let imageGeneratorService: ImageGeneratorService = new ImageGeneratorService();
