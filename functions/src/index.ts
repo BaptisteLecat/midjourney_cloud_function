@@ -51,3 +51,23 @@ export const onUserCreated = functions.region("europe-west1").auth.user().onCrea
         createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 });
+
+
+//Cloud function to allow a user to delete their account
+export const deleteAccount = functions.region("europe-west1").https.onCall(async (data, context) => {
+    const uid = context.auth?.uid;
+    if (uid == null) {
+        throw new functions.https.HttpsError('unauthenticated', 'You must be logged in to delete your account');
+    }
+
+    //delete the user's document in firestore
+    const userRef = db.collection('users').doc(uid);
+    await userRef.delete();
+
+    //delete the user's account
+    await admin.auth().deleteUser(uid);
+
+    return {
+        success: true
+    };
+});
