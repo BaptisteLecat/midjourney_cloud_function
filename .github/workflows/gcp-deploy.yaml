@@ -52,10 +52,12 @@ jobs:
           npm run build
 
       - name: deploy
-        uses: "google-github-actions/deploy-cloud-functions@v0"
+        uses: "google-github-actions/deploy-cloud-functions@@v2"
         with:
           # Name of the Cloud Function, same as the entry point name
           name: "onGenerationCreated"
           source_dir: "functions"
           # Runtime to use for the function
           runtime: "nodejs18"
+          event_trigger_type: 'providers/cloud.firestore/eventTypes/document.create'
+          event_trigger_resource: 'projects/${{ secrets.GCP_PROJECT_ID }}/databases/(default)/documents/users/{userId}/locations/{locationId}/generations/{generationId}'
