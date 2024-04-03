@@ -51,11 +51,12 @@ jobs:
           cd functions
           npm run build
       
-      - name: Deploy
-        run: |
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+      - run: |
           cd functions
           npm run deploy
-          
+
       # - name: deploy
       #   uses: "google-github-actions/deploy-cloud-functions@v2"
       #   with:
