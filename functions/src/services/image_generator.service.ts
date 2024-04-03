@@ -1,5 +1,5 @@
 
-import { Midjourney } from 'midjourney';
+import { Midjourney } from 'freezer-midjourney-api';
 import { Subject } from 'rxjs';
 import { GeneratedImage } from '../entities/generated-image.entities';
 
