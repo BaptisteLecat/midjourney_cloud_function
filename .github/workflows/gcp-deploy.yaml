@@ -18,12 +18,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Install Firebase CLI
+        run: |
+          npm install -g firebase-tools
+
       - id: auth
         name: Login
         uses: google-github-actions/auth@v1
         with:
           workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER_ID }}
           service_account: ${{ secrets.WIP_EMAIL }}
+          create_credentials_file: true
 
       - name: Configure gcloud
         uses: google-github-actions/setup-gcloud@v1
@@ -52,8 +57,7 @@ jobs:
           npm run build
       
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
-      - run: |
+        run: |
           cd functions
           npm run deploy
 
