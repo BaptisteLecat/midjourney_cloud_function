@@ -20,7 +20,7 @@ export class Generation {
     return new Generation(id, data.generatedImage, data.progress, data.prompt, data.createdAt);
   }
 
-  static fromJson(data: any): Generation {
+  static fromJSON(data: any): Generation {
     return new Generation(data.id, data.generatedImage, data.progress, data.prompt, data.createdAt);
   }
 
@@ -34,7 +34,7 @@ export class Generation {
     };
   }
 
-  toJson(): any {
+  toJSON(): any {
     return {
       id: this.id,
       generatedImage: (this.generatedImage == null) ? null : this.generatedImage.toJSON(),

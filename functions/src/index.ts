@@ -2,6 +2,9 @@ import * as functions from "firebase-functions";
 import { Generation } from "./entities/generation.entity";
 import { ImageGeneratorService } from "./services/image_generator.service";
 import * as admin from 'firebase-admin';
+import {RootGeneration} from "./entities/root-generation.entity";
+import {Location} from "./entities/location.entity";
+import {RootGenerationUser} from "./entities/root-generation-user.entity";
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -36,6 +39,19 @@ export const onGenerationCreated = functions.runWith({ timeoutSeconds: 160 }).re
 
     });
     imageGeneratorService.offProgress();
+
+    const userRef = db.collection('users').doc(context.params.userId);
+    const user = await userRef.get();
+
+    const locationRef = db.collection('users').doc(context.params.userId).collection('locations').doc(context.params.locationId);
+    const location = await locationRef.get();
+
+    //Create a generation document in root generations collection for easy access
+    const generationRef = db.collection('generations').doc(generationId);
+    console.log("Saving generation to root generations collection")
+    console.log(new RootGeneration(generationId, generation, Location.fromFirestoreDocument(location.id, location.data()), RootGenerationUser.fromFirestoreDocument(user.id, user.data())).toFirestoreDocument());
+    await generationRef.set(new RootGeneration(generationId, generation, Location.fromFirestoreDocument(location.id, location.data()), RootGenerationUser.fromFirestoreDocument(user.id, user.data())).toFirestoreDocument());
+
 });
 
 
