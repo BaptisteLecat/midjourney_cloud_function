@@ -5,6 +5,7 @@ import * as admin from 'firebase-admin';
 import {RootGeneration} from "./entities/root-generation.entity";
 import {Location} from "./entities/location.entity";
 import {RootGenerationUser} from "./entities/root-generation-user.entity";
+import fetch from 'node-fetch';
 
 admin.initializeApp();
 const db = admin.firestore();
