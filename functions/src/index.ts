@@ -31,17 +31,23 @@ export const onGenerationCreated = functions.runWith({ timeoutSeconds: 160 }).re
             throw new Error("Unable to generate image");
         }
 
-        //Upload iri image to firebase storage
+        // Download the image
+        const response = await fetch(generatedImage.uri);
+        if (!response.ok) {
+            throw new Error('Failed to download image');
+        }
+        const imageBuffer = await response.buffer();
+
+        // Upload the image to firebase storage
         const bucket = admin.storage().bucket();
-        // generatedImage.uri is like : https://cdn.discordapp.com/attachments/1119307426445938769/1264130641780281394/baptistelecat_The_city_of_Nantes_in_Pays_de_la_Loire_France_is__d5c5c517-f195-4840-b75e-73d7b0fd0ef2.png?ex=669cc0e7&is=669b6f67&hm=6467577159b61033b9800559b513cacef9bf5ce59c36d1dae75814f79e25fd16&
         const file = bucket.file(`generations/${generationId}.png`);
-        await file.save(generatedImage.uri, {
+        await file.save(imageBuffer, {
             metadata: {
                 contentType: 'image/png',
             },
         });
 
-        //Get the public url of the image
+        // Get the public URL of the image
         const [url] = await file.getSignedUrl({
             action: 'read',
             expires: '03-09-2491',
