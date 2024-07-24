@@ -31,6 +31,25 @@ export const onGenerationCreated = functions.runWith({ timeoutSeconds: 160 }).re
             throw new Error("Unable to generate image");
         }
 
+        //Upload iri image to firebase storage
+        const bucket = admin.storage().bucket();
+        const file = bucket.file(`generations/${generationId}.png`);
+        await file.save(Buffer.from(generatedImage.uri, 'base64'), {
+            contentType: 'image/png',
+            public: true,
+            metadata: {
+                cacheControl: 'public, max-age=31536000',
+            },
+        });
+
+        //Get the public url of the image
+        const [url] = await file.getSignedUrl({
+            action: 'read',
+            expires: '03-09-2491',
+        });
+
+        generatedImage.uri = url;
+
         //Save image to firestore
         generation.generatedImage = generatedImage;
         generation.progress = 100;
