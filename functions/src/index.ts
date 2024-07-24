@@ -5,7 +5,7 @@ import * as admin from 'firebase-admin';
 import {RootGeneration} from "./entities/root-generation.entity";
 import {Location} from "./entities/location.entity";
 import {RootGenerationUser} from "./entities/root-generation-user.entity";
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -33,11 +33,11 @@ export const onGenerationCreated = functions.runWith({ timeoutSeconds: 160 }).re
         }
 
         // Download the image
-        const response = await fetch(generatedImage.uri);
-        if (!response.ok) {
+        const response = await axios.get(generatedImage.uri, { responseType: 'arraybuffer' });
+        if (response.status !== 200) {
             throw new Error('Failed to download image');
         }
-        const imageBuffer = await response.buffer();
+        const imageBuffer = Buffer.from(response.data);
 
         // Upload the image to firebase storage
         const bucket = admin.storage().bucket();
@@ -46,6 +46,12 @@ export const onGenerationCreated = functions.runWith({ timeoutSeconds: 160 }).re
             metadata: {
                 contentType: 'image/png',
             },
+        });
+
+        // Get the public URL of the image
+        const [url] = await file.getSignedUrl({
+            action: 'read',
+            expires: '03-09-2491',
         });
 
         // Get the public URL of the image
