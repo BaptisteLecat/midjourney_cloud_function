@@ -54,12 +54,6 @@ export const onGenerationCreated = functions.runWith({ timeoutSeconds: 160 }).re
             expires: '03-09-2491',
         });
 
-        // Get the public URL of the image
-        const [url] = await file.getSignedUrl({
-            action: 'read',
-            expires: '03-09-2491',
-        });
-
         generatedImage.uri = url;
 
         //Save image to firestore
