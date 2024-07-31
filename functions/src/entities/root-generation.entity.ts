@@ -9,7 +9,7 @@ export class RootGeneration {
     user: RootGenerationUser;
     likesCount: number;
 
-    public constructor(id: string, generation: Generation, location: Location, user: RootGenerationUser, likesCount: number) {
+    public constructor(id: string, generation: Generation, location: Location, user: RootGenerationUser, likesCount: number = 0) {
         this.id = id;
         this.generation = generation;
         this.location = location;
